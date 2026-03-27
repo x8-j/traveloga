@@ -6,6 +6,11 @@ import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { useGlobalContext } from '../context';
 
+interface FormValues {
+  email: string;
+  password: string;
+}
+
 const Login = () => {
   const [typeIsPassword, setTypeisPassword] = useState(true);
   const {
@@ -14,7 +19,7 @@ const Login = () => {
     setError,
     clearErrors,
     formState: { errors },
-  } = useForm();
+  } = useForm<FormValues>();
   const { user, userSignIn } = useGlobalContext();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -22,9 +27,9 @@ const Login = () => {
   const formInputData = [
     ['Email:', 'email', faAt, 'text'],
     ['Password:', 'password', faEye],
-  ];
+  ] as const;
 
-  const submit = async (data) => {
+  const submit = async (data: FormValues) => {
     setIsLoading(true);
     try {
       const { data: token } = await axios.post(
