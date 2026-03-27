@@ -6,28 +6,30 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { useGlobalContext } from '../context';
-import { StatusSnackBar } from '../components/PopUpComponents';
+import { StatusSnackBar } from '@components/PopUpComponents';
+import { useSnackbar } from '@store/snackbar';
 
+interface FormValues {
+  firstname: string;
+  lastname: string;
+  email: string;
+  password: string;
+}
 const Register = () => {
   const [typeIsPassword, setTypeisPassword] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const {
-    user,
-    statusSnackbar: { isOpen },
-    userSignIn: userSignUp,
-    openSuccessSnackbar,
-    openFailedSnackbar,
-  } = useGlobalContext();
+  const { user, userSignIn: userSignUp } = useGlobalContext();
+  const { isOpen, triggerSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<FormValues>({
     firstname: '',
     lastname: '',
     email: '',
@@ -60,9 +62,9 @@ const Register = () => {
       icon: faEye,
       type: '',
     },
-  ];
+  ] as const;
 
-  const submit = async (data) => {
+  const submit = async (data: FormValues) => {
     setIsLoading(true);
     try {
       const {
@@ -76,12 +78,12 @@ const Register = () => {
       );
       setIsLoading(false);
       userSignUp(token);
-      openSuccessSnackbar(message);
+      triggerSnackbar({ type: 'success', message });
       navigate('/');
     } catch (err) {
       console.log(err);
       setIsLoading(false);
-      openFailedSnackbar(err.response.data.msg);
+      triggerSnackbar({ type: 'error', message: err.response.data.msg });
     }
   };
 
@@ -165,7 +167,7 @@ const Register = () => {
                                 message: 'Add more characters.',
                               },
                               maxLength: {
-                                value: maxLength | 15,
+                                value: maxLength ?? 15,
                                 message: 'Too much characters.',
                               },
                             })}

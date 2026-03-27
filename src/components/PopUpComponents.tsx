@@ -4,15 +4,13 @@ import {
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useGlobalContext } from '../context.js';
+import { useGlobalContext } from '../context';
+import { useSnackbar } from '@store/snackbar';
 
 const StatusSnackBar = () => {
-  const {
-    statusSnackbar: { type, isOpen, message },
-    closeSnackbar,
-  } = useGlobalContext();
+  const { type, isOpen, message, closeSnackbar } = useSnackbar();
 
   useEffect(() => {
     if (isOpen) {
@@ -20,21 +18,21 @@ const StatusSnackBar = () => {
         closeSnackbar();
       }, 2000);
     }
-  }, [isOpen]);
+  }, [closeSnackbar, isOpen]);
 
   return (
     <div className="fixed bottom-0 left-0 flex w-fit items-center gap-4 bg-white px-4 py-3 text-black">
       <div
         className={`flex items-center gap-2 ${
           type === 'success' ? 'text-green-600' : ''
-        } ${type === 'failed' ? 'text-red-600' : ''}`}>
+        } ${type === 'error' ? 'text-red-600' : ''}`}>
         {type === 'success' && (
           <FontAwesomeIcon
             className="text-lg lg:text-xl"
             icon={faCircleCheck}
           />
         )}
-        {type === 'failed' && (
+        {type === 'error' && (
           <FontAwesomeIcon
             className="text-lg lg:text-xl"
             icon={faCircleXmark}
