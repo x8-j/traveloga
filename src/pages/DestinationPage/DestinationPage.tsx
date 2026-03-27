@@ -1,4 +1,3 @@
-import React from 'react';
 import DestinationContent from './DestinationContent';
 
 const DestinationPage = () => {

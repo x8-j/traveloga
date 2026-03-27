@@ -7,23 +7,33 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useGlobalContext } from '../../context';
+import type { PreviewDestination } from '~/types/Destination';
+
+type DestinationCategoryKeys = 'beach' | 'landmark' | 'history';
+type DestionationCategoryList = Record<
+  DestinationCategoryKeys,
+  PreviewDestination[]
+>;
 
 const DestinationContent = () => {
-  const [listOfDestinations, setListOfDestinations] = useState({
-    beach: [],
-    landmark: [],
-    history: [],
-  });
-  const [categoryFilter, setCategoryFilter] = useState('');
+  const [listOfDestinations, setListOfDestinations] =
+    useState<DestionationCategoryList>({
+      beach: [],
+      landmark: [],
+      history: [],
+    });
+  const [categoryFilter, setCategoryFilter] = useState<
+    DestinationCategoryKeys | ''
+  >('');
 
   const filterValues = [
     ['', faLocationDot],
     ['beach', faUmbrellaBeach],
     ['landmark', faMountain],
     ['history', faLandmark],
-  ];
+  ] as const;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -77,7 +87,13 @@ const DestinationContent = () => {
   );
 };
 
-const EachDestinationContent = ({ list, filter }) => {
+const EachDestinationContent = ({
+  list,
+  filter,
+}: {
+  list: DestionationCategoryList;
+  filter: DestinationCategoryKeys | '';
+}) => {
   const { openDestinationUI } = useGlobalContext();
 
   if (
@@ -189,34 +205,36 @@ const EachDestinationContent = ({ list, filter }) => {
             <div className="hidden h-1 w-full bg-black md:block" />
           </div>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            {list[eachDestination].map(({ title, location, image, _id }) => (
-              <div className="flex flex-col gap-2" key={_id}>
-                <div
-                  className="group relative flex h-52 sm:h-60 md:h-40 lg:h-60 xl:h-80"
-                  onClick={() => openDestinationUI(_id)}>
-                  <img
-                    className="h-full w-full bg-black object-cover object-center"
-                    src={image}
-                    alt={title}
-                  />
-                  <div className="button_transition absolute inset-0 transition-colors group-hover:bg-black/50" />
-                </div>
-                <div className="flex items-start gap-2 px-2">
-                  <FontAwesomeIcon
-                    className="mt-1 text-xl text-[#2B8E9B] md:text-2xl"
-                    icon={faMapPin}
-                  />
-                  <div className=" flex flex-col">
-                    <h1 className="whitespace-nowrap text-base font-semibold lg:text-lg">
-                      {title}
-                    </h1>
-                    <h2 className="text-sm text-black/70 lg:text-base">
-                      {location}
-                    </h2>
+            {(list[eachDestination] as PreviewDestination[]).map(
+              ({ title, location, image, _id }) => (
+                <div className="flex flex-col gap-2" key={_id}>
+                  <div
+                    className="group relative flex h-52 sm:h-60 md:h-40 lg:h-60 xl:h-80"
+                    onClick={() => openDestinationUI(_id)}>
+                    <img
+                      className="h-full w-full bg-black object-cover object-center"
+                      src={image}
+                      alt={title}
+                    />
+                    <div className="button_transition absolute inset-0 transition-colors group-hover:bg-black/50" />
+                  </div>
+                  <div className="flex items-start gap-2 px-2">
+                    <FontAwesomeIcon
+                      className="mt-1 text-xl text-[#2B8E9B] md:text-2xl"
+                      icon={faMapPin}
+                    />
+                    <div className=" flex flex-col">
+                      <h1 className="whitespace-nowrap text-base font-semibold lg:text-lg">
+                        {title}
+                      </h1>
+                      <h2 className="text-sm text-black/70 lg:text-base">
+                        {location}
+                      </h2>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ),
+            )}
           </div>
         </div>
       ))}
