@@ -7,11 +7,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import Reviews from '../../reviews.json';
 
+interface Review {
+  name: string;
+  picture: string;
+  message: string;
+}
+
 const Testimonials = () => {
   const [reviewIndex, setReviewIndex] = useState(0);
-  const { message, name, picture } = Reviews[reviewIndex];
+  const { message, name, picture } = Reviews[reviewIndex] as Review;
 
-  const indexChecker = (num) => {
+  const indexChecker = (num: number) => {
     if (num > Reviews.length - 1) {
       return Reviews.length - 1;
     }
@@ -20,12 +26,17 @@ const Testimonials = () => {
     } else return num;
   };
 
-  const arrowClick = (num) => {
+  const arrowClick = (num: number) => {
     setReviewIndex((prev) => {
       let newNumber = prev + num;
       return indexChecker(newNumber);
     });
   };
+
+  const icons = [
+    [faArrowLeft, -1],
+    [faArrowRight, 1],
+  ] as const;
 
   return (
     <div className="flex justify-center sm:px-16">
@@ -62,10 +73,7 @@ const Testimonials = () => {
               <h1 className=" md:text-black lg:text-lg">{name}</h1>
             </div>
             <div className="flex justify-center gap-8 md:justify-start">
-              {[
-                [faArrowLeft, -1],
-                [faArrowRight, 1],
-              ].map(([icon, num], index) => (
+              {icons.map(([icon, num], index) => (
                 <FontAwesomeIcon
                   key={index}
                   className={` ${

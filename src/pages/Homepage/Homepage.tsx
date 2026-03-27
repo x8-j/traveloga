@@ -1,4 +1,3 @@
-import React from 'react';
 import AboutUsComponent from './AboutUsComponent';
 import HeroSection from './HeroSection';
 import HomeSelection from './HomeSelection';

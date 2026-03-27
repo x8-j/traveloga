@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Selection from './EachHomeSelection';
 
-const HomeSelection = ({ showCase }) => {
+const HomeSelection = ({ showCase }: { showCase: 'top' | 'seasonal' }) => {
   const [info, setInfo] = useState([]);
 
   useEffect(() => {

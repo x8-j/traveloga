@@ -2,8 +2,13 @@ import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { useGlobalContext } from '../../context';
+import type { Destination } from '~/types/Destination';
 
-const Selection = ({ info, leftPosition }) => {
+interface SelectionProps {
+  info: Destination[];
+  leftPosition?: number;
+}
+const Selection = ({ info, leftPosition = 0 }: SelectionProps) => {
   const { openDestinationUI } = useGlobalContext();
 
   if (info.length < 1) {
@@ -37,7 +42,7 @@ const Selection = ({ info, leftPosition }) => {
                 alt={title}
                 className="aspect-video h-full object-cover object-center  "
               />
-              <div className="flex items-center justify-between py-3 px-4">
+              <div className="flex items-center justify-between px-4 py-3">
                 <h1 className=" md:text-lg lg:text-xl ">{title}</h1>
                 <div className="flex items-center gap-2 text-sm text-black/70 md:text-base lg:text-black/70">
                   <FontAwesomeIcon icon={faLocationDot} />
