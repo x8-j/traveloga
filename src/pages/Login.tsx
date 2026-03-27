@@ -1,4 +1,9 @@
-import { faAt, faCompass, faEye } from '@fortawesome/free-solid-svg-icons';
+import {
+  faAt,
+  faCompass,
+  faEye,
+  type IconDefinition,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import React, { useState } from 'react';
@@ -9,6 +14,14 @@ import { useGlobalContext } from '../context';
 interface FormValues {
   email: string;
   password: string;
+}
+
+interface FormInputs {
+  title: string;
+  inputName: keyof FormValues;
+  icon: IconDefinition;
+  type: string;
+  maxLength?: number;
 }
 
 const Login = () => {
@@ -24,10 +37,20 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const formInputData = [
-    ['Email:', 'email', faAt, 'text'],
-    ['Password:', 'password', faEye],
-  ] as const;
+  const formInputData: FormInputs[] = [
+    {
+      title: 'Email:',
+      inputName: 'email',
+      icon: faAt,
+      type: 'text',
+    },
+    {
+      title: 'Password:',
+      inputName: 'password',
+      icon: faEye,
+      type: typeIsPassword ? 'password' : 'text',
+    },
+  ];
 
   const submit = async (data: FormValues) => {
     setIsLoading(true);
@@ -107,7 +130,7 @@ const Login = () => {
                   onSubmit={handleSubmit(submit)}>
                   <div className="flex flex-col gap-8">
                     {formInputData.map(
-                      ([title, inputName, icon, type], index) => (
+                      ({ title, inputName, icon, type }, index) => (
                         <div className="flex flex-col gap-2" key={index}>
                           <div className="flex items-center justify-between">
                             <label className="md:text-lg">{title}</label>
@@ -120,13 +143,7 @@ const Login = () => {
                           <div className="flex items-center gap-4 bg-white px-3 py-2 ">
                             <input
                               className="w-full bg-transparent py-1 text-black outline-none md:py-0 md:text-lg"
-                              type={
-                                !type
-                                  ? typeIsPassword
-                                    ? 'password'
-                                    : 'text'
-                                  : type
-                              }
+                              type={type}
                               {...register(inputName, {
                                 required: 'This field is required',
                                 onChange: () => clearErrors([inputName]),
