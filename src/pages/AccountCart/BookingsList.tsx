@@ -2,8 +2,19 @@ import axios from 'axios';
 import React, { useEffect } from 'react';
 import { useGlobalContext } from '../../context';
 import EachBooking from './EachBooking';
+import type { Booking } from '~/types/Booking';
+import type { BookingFilter } from './AccountNavigation';
 
-const BookingsList = ({ listOfBookings, alterBookingList, bookingFilter }) => {
+interface BookingsListProps {
+  listOfBookings: Booking[];
+  alterBookingList: (bookings: Booking[]) => void;
+  bookingFilter: BookingFilter;
+}
+const BookingsList = ({
+  listOfBookings,
+  alterBookingList,
+  bookingFilter,
+}: BookingsListProps) => {
   const { authToken } = useGlobalContext();
   const bookingListValues = ['Cart', 'Booked', 'Cancelled', 'Refunded'];
 

@@ -14,7 +14,16 @@ import React from 'react';
 import { useGlobalContext } from '../../context';
 import { useNavigate } from 'react-router-dom';
 
-const AccountNavigation = ({ bookingFilter, setFilter }) => {
+export type BookingFilter = 'Cart' | 'Booked' | 'Cancelled' | 'Refunded' | '';
+
+interface AccountNavigationProps {
+  bookingFilter: BookingFilter;
+  setFilter: (Value: BookingFilter) => void;
+}
+const AccountNavigation = ({
+  bookingFilter,
+  setFilter,
+}: AccountNavigationProps) => {
   const { user, userSignOut } = useGlobalContext();
   const navigate = useNavigate();
 
@@ -29,7 +38,7 @@ const AccountNavigation = ({ bookingFilter, setFilter }) => {
     [faPassport, 'Booked'],
     [faPlaneSlash, 'Cancelled'],
     [faMoneyBills, 'Refunded'],
-  ];
+  ] as const;
 
   return (
     <div className="flex justify-center bg-[#423F3F] px-6 py-4 sm:px-16">

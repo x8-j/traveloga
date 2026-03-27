@@ -1,24 +1,25 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useGlobalContext } from '../../context';
-import AccountNavigation from './AccountNavigation';
+import AccountNavigation, { type BookingFilter } from './AccountNavigation';
 import BookingsList from './BookingsList';
-import TransitionWrapper from '../../components/TransitionWrapper';
-import PaymentModal from '../../components/PaymentModal';
+import TransitionWrapper from '@components/TransitionWrapper';
+import PaymentModal from '@components/PaymentModal';
+import type { Booking } from '~/types/Booking';
 
 const PersonalAccount = () => {
   const {
     user,
     isPaymentOpen: { isOpen },
   } = useGlobalContext();
-  const [bookingFilter, setBookingFilter] = useState('');
-  const [listOfBookings, setListOfBookings] = useState(null);
+  const [bookingFilter, setBookingFilter] = useState<BookingFilter>('');
+  const [listOfBookings, setListOfBookings] = useState<Booking[]>([]);
 
-  const setFilter = (val) => {
+  const setFilter = (val: BookingFilter) => {
     setBookingFilter(val);
   };
 
-  const alterBookingList = (data) => {
+  const alterBookingList = (data: Booking[]) => {
     setListOfBookings(data);
   };
 

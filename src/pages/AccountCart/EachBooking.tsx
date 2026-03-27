@@ -3,13 +3,20 @@ import React, { useEffect, useState } from 'react';
 import { useGlobalContext } from '../../context';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import type { Booking } from '~/types/Booking';
+import { useSnackbar } from '~/store/snackbar';
 
-const EachBooking = ({ eachBooking, alterBookingList }) => {
-  const { setPayment, authToken, openSuccessSnackbar, openFailedSnackbar } =
-    useGlobalContext();
+interface EachBookingProps {
+  eachBooking: Booking;
+  alterBookingList: (bookings: Booking[]) => void;
+}
+const EachBooking = ({ eachBooking, alterBookingList }: EachBookingProps) => {
+  const { setPayment, authToken } = useGlobalContext();
+  const { triggerSnackbar } = useSnackbar();
+
   const [isLoading, setIsLoading] = useState(false);
 
-  const cancelStatus = async (id) => {
+  const cancelStatus = async (id: string) => {
     setIsLoading(true);
     try {
       const {
@@ -19,17 +26,17 @@ const EachBooking = ({ eachBooking, alterBookingList }) => {
         { status: 'Cancelled' },
         { headers: { Authorization: `Bearer ${authToken}` } },
       );
-      openSuccessSnackbar(message);
+      triggerSnackbar({ type: 'success', message });
       alterBookingList(bookings);
     } catch (err) {
-      openFailedSnackbar(err.response.data.message);
+      triggerSnackbar({ type: 'error', message: err.response.data.message });
       console.log(err);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const deleteBooking = async (id) => {
+  const deleteBooking = async (id: string) => {
     try {
       const {
         data: { message, bookings },
@@ -39,10 +46,10 @@ const EachBooking = ({ eachBooking, alterBookingList }) => {
           headers: { Authorization: `Bearer ${authToken}` },
         },
       );
-      openSuccessSnackbar(message);
+      triggerSnackbar({ type: 'success', message });
       alterBookingList(bookings);
     } catch (err) {
-      openFailedSnackbar(err.response.data.message);
+      triggerSnackbar({ type: 'error', message: err.response.data.message });
       console.log(err);
     }
   };

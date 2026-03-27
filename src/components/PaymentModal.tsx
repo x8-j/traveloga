@@ -3,15 +3,21 @@ import { useGlobalContext } from '../context';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCashRegister } from '@fortawesome/free-solid-svg-icons';
+import { useSnackbar } from '~/store/snackbar';
+import type { Booking } from '~/types/Booking';
 
-const PaymentModal = ({ alterBookingList }) => {
+const PaymentModal = ({
+  alterBookingList,
+}: {
+  alterBookingList: (bookings: Booking[]) => void;
+}) => {
   const {
     authToken,
     isPaymentOpen: { id, value },
     cancelPayment,
-    openSuccessSnackbar,
-    openFailedSnackbar,
   } = useGlobalContext();
+
+  const { triggerSnackbar } = useSnackbar();
   const [isLoading, setIsLoading] = useState(false);
 
   const verifiedPayment = async () => {
@@ -24,11 +30,11 @@ const PaymentModal = ({ alterBookingList }) => {
         { status: 'Booked' },
         { headers: { Authorization: `Bearer ${authToken}` } },
       );
-      openSuccessSnackbar(message);
+      triggerSnackbar({ type: 'success', message });
       alterBookingList(bookings);
     } catch (err) {
       console.log(err);
-      openFailedSnackbar(err.response.data.message);
+      triggerSnackbar({ type: 'error', message: err.response.data.message });
     } finally {
       setIsLoading(false);
       cancelPayment();
