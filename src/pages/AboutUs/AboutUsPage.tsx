@@ -4,7 +4,6 @@ import {
   faSmileBeam,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
 import SlidingPictures from './SlidingPictures';
 
 const AboutUsPage = () => {
@@ -24,7 +23,7 @@ const AboutUsPage = () => {
       'EXPERIENCE',
       'We ensure a fun and worthwile experience both during the booking process and the vacation itself.',
     ],
-  ];
+  ] as const;
 
   return (
     <div className="flex flex-col gap-32 md:gap-40">
@@ -34,7 +33,7 @@ const AboutUsPage = () => {
           style={{
             backgroundImage: `url("/images/aboutuspage-heropic.avif")`,
           }}>
-          <div className=" absolute flex flex-col items-center justify-center gap-4 place-self-end bg-[#423F3F]/90 py-10 px-10 text-center text-white sm:py-16 md:top-0 md:bottom-0 md:left-0 md:h-full md:w-7/12 md:max-w-lg md:gap-10 md:place-self-start md:py-10 md:text-left lg:w-1/2 lg:max-w-2xl lg:py-12 xl:py-14">
+          <div className=" absolute flex flex-col items-center justify-center gap-4 place-self-end bg-[#423F3F]/90 px-10 py-10 text-center text-white sm:py-16 md:bottom-0 md:left-0 md:top-0 md:h-full md:w-7/12 md:max-w-lg md:gap-10 md:place-self-start md:py-10 md:text-left lg:w-1/2 lg:max-w-2xl lg:py-12 xl:py-14">
             <div className="flex flex-col gap-1 md:gap-4">
               <h1 className="font-Rubik text-lg text-amber-200 lg:text-xl">
                 ABOUT US
@@ -86,7 +85,7 @@ const AboutUsPage = () => {
         </div>
       </div>
       <div className="flex justify-center ">
-        <div className="flex w-full max-w-7xl flex-col gap-2 bg-[#423F3F] px-8 pt-8 pb-10 text-center text-white md:px-16 lg:px-10 lg:py-14 lg:pb-12">
+        <div className="flex w-full max-w-7xl flex-col gap-2 bg-[#423F3F] px-8 pb-10 pt-8 text-center text-white md:px-16 lg:px-10 lg:py-14 lg:pb-12">
           <h1 className="font-Rubik text-lg lg:text-xl">ORIGIN</h1>
           <p className="text-justify text-base opacity-90 lg:text-lg">
             It all started as a group of friends that have a passion for
@@ -104,7 +103,7 @@ const AboutUsPage = () => {
         <div
           className="flex max-w-[100rem] justify-center bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url("/images/progressivility.avif")` }}>
-          <div className="flex w-full flex-col gap-2 bg-[#423F3F]/80 px-8 pt-10 pb-8 text-white md:py-14 md:px-16 lg:py-16 xl:px-28">
+          <div className="flex w-full flex-col gap-2 bg-[#423F3F]/80 px-8 pb-8 pt-10 text-white md:px-16 md:py-14 lg:py-16 xl:px-28">
             <div className="flex flex-col">
               <h1 className=" font-Rubik text-lg lg:text-xl">PROGRESSIVITY</h1>
               <p className=" text-justify text-base opacity-90">

@@ -1,5 +1,3 @@
-import React from 'react';
-
 const SlidingPictures = () => {
   const aboutUsPictures = [
     ['images/slidepic1.avif'],
