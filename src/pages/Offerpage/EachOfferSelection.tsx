@@ -1,8 +1,9 @@
 import { faTag } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useGlobalContext } from '../../context';
+import type { Destionation } from '~/types/Destination';
 
-const EachOfferSelection = ({ data }) => {
+const EachOfferSelection = ({ data }: { data: Destionation[] }) => {
   const { openBookingUI } = useGlobalContext();
 
   if (data.length < 1) {
@@ -66,7 +67,7 @@ const EachOfferSelection = ({ data }) => {
                   {description}
                 </p>
                 <div className="flex flex-col gap-1">
-                  {Object.keys(limitedOffers).map((eachOffer, array) => (
+                  {Object.entries(limitedOffers).map(([eachOffer, array]) => (
                     <div className="flex items-center gap-1" key={array}>
                       <FontAwesomeIcon
                         className=" text-red-700 md:text-lg"
@@ -83,7 +84,7 @@ const EachOfferSelection = ({ data }) => {
                 </div>
               </div>
               <div
-                className="button_transition flex w-full items-center justify-center bg-amber-300 py-3 px-4 hover:bg-amber-400 hover:text-white sm:w-fit md:py-2"
+                className="button_transition flex w-full items-center justify-center bg-amber-300 px-4 py-3 hover:bg-amber-400 hover:text-white sm:w-fit md:py-2"
                 onClick={() => {
                   openBookingUI(_id);
                 }}>
