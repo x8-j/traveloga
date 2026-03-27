@@ -67,17 +67,19 @@ const EachOfferSelection = ({ data }: { data: Destionation[] }) => {
                   {description}
                 </p>
                 <div className="flex flex-col gap-1">
-                  {Object.entries(limitedOffers).map(([eachOffer, array]) => (
-                    <div className="flex items-center gap-1" key={array}>
+                  {Object.entries(limitedOffers).map(([key, val]) => (
+                    <div
+                      className="flex items-center gap-1"
+                      key={`${_id}-${key}`}>
                       <FontAwesomeIcon
                         className=" text-red-700 md:text-lg"
                         icon={faTag}
                       />
                       <h1 className="text-sm capitalize md:text-base">
-                        {eachOffer}:{' '}
+                        {key}:{' '}
                       </h1>
                       <h2 className="font-semibold text-red-700 md:text-lg">
-                        {limitedOffers[eachOffer]}% OFF{' '}
+                        {val}% OFF{' '}
                       </h2>
                     </div>
                   ))}
