@@ -30,10 +30,12 @@ const Register = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>({
-    firstname: '',
-    lastname: '',
-    email: '',
-    password: '',
+    defaultValues: {
+      firstname: '',
+      lastname: '',
+      email: '',
+      password: '',
+    },
   });
 
   const formInputData = [
