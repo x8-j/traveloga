@@ -196,45 +196,43 @@ const EachDestinationContent = ({
 
   return (
     <>
-      {Object.keys(list).map((eachDestination, index) => (
+      {Object.entries(list).map(([category, destinationList], index) => (
         <div className="flex flex-col gap-4 md:gap-6 lg:gap-8" key={index}>
           <div className="flex flex-col gap-2">
             <h1 className="text-center font-Rubik text-lg lg:text-left lg:text-xl">
-              {eachDestination.toLocaleUpperCase()}
+              {category.toLocaleUpperCase()}
             </h1>
             <div className="hidden h-1 w-full bg-black md:block" />
           </div>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            {(list[eachDestination] as PreviewDestination[]).map(
-              ({ title, location, image, _id }) => (
-                <div className="flex flex-col gap-2" key={_id}>
-                  <div
-                    className="group relative flex h-52 sm:h-60 md:h-40 lg:h-60 xl:h-80"
-                    onClick={() => openDestinationUI(_id)}>
-                    <img
-                      className="h-full w-full bg-black object-cover object-center"
-                      src={image}
-                      alt={title}
-                    />
-                    <div className="button_transition absolute inset-0 transition-colors group-hover:bg-black/50" />
-                  </div>
-                  <div className="flex items-start gap-2 px-2">
-                    <FontAwesomeIcon
-                      className="mt-1 text-xl text-[#2B8E9B] md:text-2xl"
-                      icon={faMapPin}
-                    />
-                    <div className=" flex flex-col">
-                      <h1 className="whitespace-nowrap text-base font-semibold lg:text-lg">
-                        {title}
-                      </h1>
-                      <h2 className="text-sm text-black/70 lg:text-base">
-                        {location}
-                      </h2>
-                    </div>
+            {destinationList.map(({ title, location, image, _id }) => (
+              <div className="flex flex-col gap-2" key={_id}>
+                <div
+                  className="group relative flex h-52 sm:h-60 md:h-40 lg:h-60 xl:h-80"
+                  onClick={() => openDestinationUI(_id)}>
+                  <img
+                    className="h-full w-full bg-black object-cover object-center"
+                    src={image}
+                    alt={title}
+                  />
+                  <div className="button_transition absolute inset-0 transition-colors group-hover:bg-black/50" />
+                </div>
+                <div className="flex items-start gap-2 px-2">
+                  <FontAwesomeIcon
+                    className="mt-1 text-xl text-[#2B8E9B] md:text-2xl"
+                    icon={faMapPin}
+                  />
+                  <div className=" flex flex-col">
+                    <h1 className="whitespace-nowrap text-base font-semibold lg:text-lg">
+                      {title}
+                    </h1>
+                    <h2 className="text-sm text-black/70 lg:text-base">
+                      {location}
+                    </h2>
                   </div>
                 </div>
-              ),
-            )}
+              </div>
+            ))}
           </div>
         </div>
       ))}
