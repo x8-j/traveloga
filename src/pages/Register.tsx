@@ -3,6 +3,7 @@ import {
   faCompass,
   faEye,
   faUser,
+  type IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
@@ -18,6 +19,14 @@ interface FormValues {
   lastname: string;
   email: string;
   password: string;
+}
+
+interface FormInputs {
+  title: string;
+  inputName: keyof FormValues;
+  icon: IconDefinition;
+  type: string;
+  maxLength?: number;
 }
 const Register = () => {
   const [typeIsPassword, setTypeisPassword] = useState(true);
@@ -38,7 +47,7 @@ const Register = () => {
     },
   });
 
-  const formInputData = [
+  const formInputData: FormInputs[] = [
     {
       title: 'First Name:',
       inputName: 'firstname',
@@ -64,7 +73,7 @@ const Register = () => {
       icon: faEye,
       type: '',
     },
-  ] as const;
+  ];
 
   const submit = async (data: FormValues) => {
     setIsLoading(true);
