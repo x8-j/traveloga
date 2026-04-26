@@ -5,63 +5,72 @@ import { useGlobalContext } from '../context';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye } from '@fortawesome/free-solid-svg-icons';
 
+type FormInputs =
+  | 'firstname'
+  | 'lastname'
+  | 'email'
+  | 'password'
+  | 'currentPassword';
+type FormValues = Record<FormInputs, string>;
+interface FormInputData {
+  title: string;
+  inputName: FormInputs;
+  type: string;
+  icon?: boolean;
+  maxLength?: number;
+}
+const formInputData: FormInputData[] = [
+  {
+    title: 'First name',
+    inputName: 'firstname',
+    type: 'text',
+  },
+  {
+    title: 'Last name',
+    inputName: 'lastname',
+    type: 'text',
+  },
+  {
+    title: 'Email',
+    inputName: 'email',
+    type: 'email',
+    maxLength: 25,
+  },
+  {
+    title: 'Password',
+    inputName: 'password',
+    icon: true,
+    type: '',
+  },
+  {
+    title: 'Current password',
+    inputName: 'currentPassword',
+    icon: true,
+    type: '',
+  },
+];
+
 const EditAccountComponent = () => {
   const {
     unregister,
     setValue,
     handleSubmit,
     formState: { errors },
-  } = useForm();
-  const formInputData = [
-    {
-      title: 'First name',
-      inputName: 'firstname',
-      type: 'text',
-    },
-    {
-      title: 'Last name',
-      inputName: 'lastname',
-      type: 'text',
-    },
-    {
-      title: 'Email',
-      inputName: 'email',
-      type: 'email',
-      maxLength: 25,
-    },
-    {
-      title: 'Password',
-      inputName: 'password',
-      icon: true,
-      type: '',
-    },
-    {
-      title: 'Current password',
-      inputName: 'currentPassword',
-      icon: true,
-      type: '',
-    },
-  ];
+  } = useForm<FormValues>();
 
   const { user, authToken } = useGlobalContext();
-  const [formInputState, setFormInputState] = useState({
-    firstname: '',
-    lastname: '',
-    email: '',
-    password: '',
-    currentPassword: '',
-  });
 
   const [typeisPassword, setTypeIsPassword] = useState({
     password: true,
     currentPassword: true,
   });
-  const checkInputValue = (inputName, value) => {
+
+  const checkInputValue = (inputName: FormInputs, value: string) => {
     setValue(inputName, value);
     if (!value) unregister(inputName);
   };
 
-  const formSubmit = async (data) => {
+  const formSubmit = async (data: FormValues) => {
     try {
       const {
         data: { message },
@@ -97,7 +106,8 @@ const EditAccountComponent = () => {
                   className="w-full px-4 py-2"
                   type={
                     !type
-                      ? typeisPassword[inputName]
+                      ? inputName in typeisPassword &&
+                        typeisPassword[inputName as keyof typeof typeisPassword]
                         ? `password`
                         : `text`
                       : type
@@ -113,7 +123,12 @@ const EditAccountComponent = () => {
                     onClick={() =>
                       setTypeIsPassword({
                         ...typeisPassword,
-                        [inputName]: !typeisPassword[inputName],
+                        [inputName]: !(
+                          inputName in typeisPassword &&
+                          typeisPassword[
+                            inputName as keyof typeof typeisPassword
+                          ]
+                        ),
                       })
                     }
                   />

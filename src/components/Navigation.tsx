@@ -9,13 +9,15 @@ import EachDestinationUI from './EachDestinationUI';
 import Footer from './Footer.jsx';
 import { SignInRequiredComponent, StatusSnackBar } from './PopUpComponents';
 import TransitionWrapper from './TransitionWrapper';
+import { useSnackbar } from '../store/snackbar';
 
 const Nav = () => {
   const {
     user,
     contentModal: { isOpen: isContentOpen, type: contentType },
-    statusSnackbar,
   } = useGlobalContext();
+
+  const { isOpen } = useSnackbar();
 
   const navRef = useRef(null);
 
@@ -148,7 +150,7 @@ const Nav = () => {
           <SignInRequiredComponent />
         )}
       </TransitionWrapper>
-      {statusSnackbar.isOpen && <StatusSnackBar />}
+      {isOpen && <StatusSnackBar />}
     </div>
   );
 };

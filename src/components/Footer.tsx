@@ -12,9 +12,9 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useGlobalContext } from '../context.js';
+import { useSnackbar } from '../store/snackbar.js';
 
 const Footer = () => {
   return (
@@ -25,18 +25,23 @@ const Footer = () => {
   );
 };
 
+type TopFooterFormInputs = 'email';
+type TopFooterFormValues = Record<TopFooterFormInputs, string>;
+
 const TopFooter = () => {
-  const { openSuccessSnackbar, openFailedSnackbar } = useGlobalContext();
+  const { triggerSnackbar } = useSnackbar();
   const [isLoading, setIsLoading] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    email: '',
+  } = useForm<TopFooterFormValues>({
+    defaultValues: {
+      email: '',
+    },
   });
 
-  const formSubmit = async (formData) => {
+  const formSubmit = async (formData: TopFooterFormValues) => {
     setIsLoading(true);
 
     try {
@@ -52,10 +57,10 @@ const TopFooter = () => {
         process.env.REACT_APP_PUBLIC_KEY,
       );
       setIsLoading(false);
-      openSuccessSnackbar(message);
-    } catch (err) {
+      triggerSnackbar({ type: 'success', message });
+    } catch (err: any) {
       setIsLoading(false);
-      openFailedSnackbar(err.response.data.msg);
+      triggerSnackbar({ type: 'error', message: err.response.data.msg });
       console.log(err);
     }
   };
@@ -77,16 +82,14 @@ const TopFooter = () => {
             other changes to our services
           </p>
           <form
-            className="flex w-full  items-center gap-4 bg-white py-2 px-3 text-black "
+            className="flex w-full  items-center gap-4 bg-white px-3 py-2 text-black "
             onSubmit={handleSubmit(formSubmit)}>
             <input
               className={`${
                 errors.email ? 'placeholder:text-red-700' : ''
               } flex-auto bg-transparent py-2 text-sm outline-none md:text-base`}
               type="email"
-              placeholder={
-                errors.email ? errors.email.message : 'JohnDoe@domain.com'
-              }
+              placeholder={errors?.email?.message ?? 'JohnDoe@domain.com'}
               {...register('email', {
                 required: 'Please provide your email',
               })}
@@ -94,7 +97,7 @@ const TopFooter = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="button_transition enabled:hover:bg-amber-400 enabled:hover:text-white flex items-center gap-4 bg-amber-300 py-2 px-4 disabled:bg-amber-200 md:py-2 md:px-6">
+              className="button_transition flex items-center gap-4 bg-amber-300 px-4 py-2 enabled:hover:bg-amber-400 enabled:hover:text-white disabled:bg-amber-200 md:px-6 md:py-2">
               <h1 className="hidden sm:block">SUBMIT</h1>
               {isLoading ? (
                 <FontAwesomeIcon
@@ -115,21 +118,26 @@ const TopFooter = () => {
   );
 };
 
+type BottomFooterFormInputs = 'name' | 'email' | 'subject' | 'message';
+type BottomFooterFormValues = Record<BottomFooterFormInputs, string>;
+
 const BottomFooter = () => {
-  const { openSuccessSnackbar, openFailedSnackbar } = useGlobalContext();
+  const { triggerSnackbar } = useSnackbar();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    name: '',
-    subject: '',
-    email: '',
-    message: '',
+  } = useForm<BottomFooterFormValues>({
+    defaultValues: {
+      name: '',
+      subject: '',
+      email: '',
+      message: '',
+    },
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  const formSubmit = async (formData) => {
+  const formSubmit = async (formData: BottomFooterFormValues) => {
     setIsLoading(true);
     try {
       const { data: message } = await axios.post(
@@ -138,16 +146,16 @@ const BottomFooter = () => {
         { headers: { 'Content-Type': 'application/json' } },
       );
       setIsLoading(false);
-      openSuccessSnackbar(message);
-    } catch (err) {
+      triggerSnackbar({ type: 'success', message });
+    } catch (err: any) {
       setIsLoading(false);
-      openFailedSnackbar(err.response.data.msg);
+      triggerSnackbar({ type: 'error', message: err.response.data.msg });
     }
   };
 
   return (
     <section className="flex justify-center">
-      <div className="flex w-full max-w-[100rem] flex-col items-stretch gap-4 bg-[#2B8E9B] py-8 px-6 sm:px-16 md:flex-row-reverse md:items-start md:gap-8 lg:gap-12 lg:py-8">
+      <div className="flex w-full max-w-[100rem] flex-col items-stretch gap-4 bg-[#2B8E9B] px-6 py-8 sm:px-16 md:flex-row-reverse md:items-start md:gap-8 lg:gap-12 lg:py-8">
         <form
           className="flex flex-auto flex-col gap-4 text-white md:flex-row"
           onSubmit={handleSubmit(formSubmit)}>
@@ -160,12 +168,14 @@ const BottomFooter = () => {
                   errors.name
                     ? `placeholder:text-red-700/50`
                     : `placeholder:text-slate-300`
-                } button_transition border-2 border-white bg-transparent py-2 px-3 placeholder:italic  hover:border-amber-200`}
+                } button_transition border-2 border-white bg-transparent px-3 py-2 placeholder:italic  hover:border-amber-200`}
                 {...register('name', {
                   required: 'Please provide your name.',
                 })}
                 type="text"
-                placeholder={errors.name ? errors.name.message : 'John Doe'}
+                placeholder={
+                  errors.name ? (errors.name.message as string) : 'John Doe'
+                }
               />
             </div>
             <div className="flex flex-col gap-2">
@@ -176,13 +186,15 @@ const BottomFooter = () => {
                   errors.email
                     ? `placeholder:text-red-700/50`
                     : `placeholder:text-slate-300`
-                } button_transition border-2 border-white bg-transparent py-2 px-3 placeholder:italic  hover:border-amber-200`}
+                } button_transition border-2 border-white bg-transparent px-3 py-2 placeholder:italic  hover:border-amber-200`}
                 {...register('email', {
                   required: 'Please provide your email',
                 })}
                 type="email"
                 placeholder={
-                  errors.email ? errors.email.message : 'johndoe@website.com'
+                  errors.email
+                    ? (errors.email.message as string)
+                    : 'johndoe@website.com'
                 }
               />
             </div>
@@ -194,12 +206,12 @@ const BottomFooter = () => {
                   errors.subject
                     ? `placeholder:text-red-700/50`
                     : `placeholder:text-slate-300`
-                } button_transition border-2 border-white bg-transparent py-2 px-3 placeholder:italic  hover:border-amber-200`}
+                } button_transition border-2 border-white bg-transparent px-3 py-2 placeholder:italic  hover:border-amber-200`}
                 {...register('subject')}
                 type="text"
                 placeholder={
                   errors.subject
-                    ? errors.subject.message
+                    ? (errors.subject.message as string)
                     : 'Destination Inquiry'
                 }
               />
@@ -214,20 +226,19 @@ const BottomFooter = () => {
                   errors.message
                     ? `placeholder:text-red-700/50`
                     : `placeholder:text-slate-300`
-                } button_transition h-32 border-2 border-white bg-transparent py-2 px-3 placeholder:italic hover:border-amber-200  md:flex-auto`}
+                } button_transition h-32 border-2 border-white bg-transparent px-3 py-2 placeholder:italic hover:border-amber-200  md:flex-auto`}
                 {...register('message', {
                   required: 'Please provide your message',
                 })}
                 placeholder={
-                  errors.message
-                    ? errors.message.message
-                    : 'I would like to book for...'
+                  (errors.message?.message as string) ??
+                  'I would like to book for...'
                 }
               />
             </div>
 
             <button
-              className="translation-all button_transition enabled:hover:text-amber-400 font-semibold text-amber-300 disabled:text-amber-200 md:text-right lg:self-end"
+              className="translation-all button_transition font-semibold text-amber-300 enabled:hover:text-amber-400 disabled:text-amber-200 md:text-right lg:self-end"
               type="submit"
               disabled={isLoading}>
               SUBMIT

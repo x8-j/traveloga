@@ -2,7 +2,13 @@ import { Dialog, Transition } from '@headlessui/react';
 import React, { Fragment } from 'react';
 import { useGlobalContext } from '../context.js';
 
-const TransitionWrapper = ({ children, isOpen }) => {
+const TransitionWrapper = ({
+  children,
+  isOpen,
+}: {
+  children: React.ReactNode;
+  isOpen: boolean;
+}) => {
   const { isPaymentOpen, cancelPayment, contentModal, closeModal } =
     useGlobalContext();
 
