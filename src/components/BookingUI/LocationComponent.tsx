@@ -1,8 +1,8 @@
 import { faTag } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
 import useBookingContext from './BookingStateContext';
 import flights from '../../mockdata.json';
+import type { Location } from '../../types/Location';
 
 const LocationComponent = () => {
   const {
@@ -20,7 +20,7 @@ const LocationComponent = () => {
         <h2 className="font-medium md:text-lg">Location</h2>
         {errors.travellingFromLocation ? (
           <p className="text-sm text-red-600">
-            {errors.travellingFromLocation.message}
+            {errors.travellingFromLocation}
           </p>
         ) : (
           <p className="text-sm text-black/70 md:text-black/90">
@@ -44,11 +44,11 @@ const LocationComponent = () => {
             </option>
             {flightType &&
               regionsCategory &&
-              flights[flightType]
+              (flights as Location)[flightType]
                 .find(({ location }) =>
                   Object.hasOwn(location, regionsCategory),
                 )
-                ['location'][regionsCategory].map((eachLocation, index) => (
+                ?.['location']?.[regionsCategory]?.map((eachLocation, index) => (
                   <option
                     className="capitalize"
                     key={index}

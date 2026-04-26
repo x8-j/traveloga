@@ -1,5 +1,4 @@
 import moment from 'moment';
-import React from 'react';
 import useBookingContext from './BookingStateContext';
 
 const DateOfBookingComponent = () => {

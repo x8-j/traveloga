@@ -6,36 +6,115 @@ import {
   useContext,
   useEffect,
 } from 'react';
-import { initialState, bookingReducer } from './BookingReducer';
+import {
+  initialState,
+  bookingReducer,
+  type FlightType,
+} from './BookingReducer';
 import { useGlobalContext } from '../../context.js';
 import moment from 'moment';
 import axios from 'axios';
+import { useSnackbar } from '@store/snackbar';
 
-const BookingContext = createContext();
+interface DomesticFees {
+  travelIn: number;
+  travelOut: number;
+  hotelFeePerDay: number;
+  stayFeePerDay: number;
+}
 
-export const BookingProvider = ({ children }) => {
+interface InternationalFees {
+  [region: string]: {
+    travelIn: number;
+    travelOut: number;
+    hotelFeePerDay: number;
+    stayFeePerDay: number;
+  };
+}
+
+interface LimitedOffers {
+  domestic: number;
+  international: number;
+}
+
+interface BookingInfo {
+  title: string;
+  limitedOffers: LimitedOffers;
+  domestic: DomesticFees;
+  international: InternationalFees;
+}
+
+interface Errors {
+  flightTypeRegion: string;
+  location: string;
+  date: string;
+  travellingFromLocation: string;
+}
+
+interface BookingContextType {
+  flightType: FlightType | '';
+  regionsCategory: string;
+  eachRegion: string;
+  withHotel: boolean;
+  dateOfLeave: string;
+  dateOfReturn: string;
+  initialAmount: number;
+  discount: number;
+  amount: number;
+  title: string;
+  limitedOffers: LimitedOffers;
+  domestic: DomesticFees;
+  international: InternationalFees;
+  errors: Errors;
+  flightTypeSelect: (val: FlightType) => void;
+  regionSelect: (prov: string, region: string) => void;
+  locationSelect: (val: string) => void;
+  hotelToggle: () => void;
+  dateSelection: (label: string, value: string) => void;
+  initialAmountSet: (fees: {
+    domestic: DomesticFees;
+    international: InternationalFees;
+  }) => void;
+  discountSet: (offers: LimitedOffers) => void;
+  amountSet: () => void;
+  formSubmit: (changeLoading: (val: boolean) => void) => Promise<void>;
+}
+
+const BookingContext = createContext<BookingContextType | undefined>(undefined);
+
+export const BookingProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const [state, dispatch] = useReducer(bookingReducer, initialState);
   const {
     contentModal: { isOpen, id },
-    openSuccessSnackbar,
-    openFailedSnackbar,
     openSignInModal,
     closeModal,
     authToken,
   } = useGlobalContext();
 
+  const { triggerSnackbar } = useSnackbar();
+
   // Booking Information for the form
-  const [bookingInfo, setBookingInfo] = useState({
+  const [bookingInfo, setBookingInfo] = useState<BookingInfo>({
     title: '',
-    limitedOffers: {},
-    domestic: {},
+    limitedOffers: { domestic: 0, international: 0 },
+    domestic: {
+      travelIn: 0,
+      travelOut: 0,
+      hotelFeePerDay: 0,
+      stayFeePerDay: 0,
+    },
     international: {},
   });
 
-  const [errors, setErrors] = useState({
+  const [errors, setErrors] = useState<Errors>({
     flightTypeRegion: '',
     location: '',
     date: '',
+    travellingFromLocation: '',
   });
 
   useEffect(() => {
@@ -59,7 +138,7 @@ export const BookingProvider = ({ children }) => {
     };
   }, [id, isOpen]);
 
-  const flightTypeSelect = (val) => {
+  const flightTypeSelect = (val: FlightType) => {
     if (errors.flightTypeRegion) {
       setErrors((prev) => ({
         ...prev,
@@ -68,11 +147,11 @@ export const BookingProvider = ({ children }) => {
     }
     dispatch({
       type: 'CHANGE_FLIGHTTYPE',
-      payload: val,
+      payload: { flightType: val },
     });
   };
 
-  const regionSelect = (prov, region) => {
+  const regionSelect = (prov: string, region: string) => {
     if (!state.flightType) {
       setErrors((prev) => ({
         ...prev,
@@ -89,13 +168,13 @@ export const BookingProvider = ({ children }) => {
     dispatch({
       type: 'SET_REGION',
       payload: {
-        prov,
-        region,
+        regionsCategory: prov,
+        travellingFromRegion: region,
       },
     });
   };
 
-  const locationSelect = (val) => {
+  const locationSelect = (val: string) => {
     if (!state.flightType || !state.regionsCategory) {
       setErrors((prev) => ({
         ...prev,
@@ -112,7 +191,7 @@ export const BookingProvider = ({ children }) => {
     }
     dispatch({
       type: 'SET_LOCATION',
-      payload: val,
+      payload: { travellingFromLocation: val },
     });
   };
 
@@ -120,7 +199,7 @@ export const BookingProvider = ({ children }) => {
     dispatch({ type: 'HOTEL_TOGGLE' });
   };
 
-  const dateSelection = (label, value) => {
+  const dateSelection = (label: string, value: string) => {
     if (errors.date) {
       setErrors((prev) => ({
         ...prev,
@@ -140,8 +219,10 @@ export const BookingProvider = ({ children }) => {
       dispatch({
         type: 'DATE_CLICK',
         payload: {
-          label,
-          value: moment(value).toISOString(),
+          date: {
+            ...state.date,
+            [label]: moment(value).toISOString(),
+          },
         },
       });
       return;
@@ -165,8 +246,10 @@ export const BookingProvider = ({ children }) => {
     dispatch({
       type: 'DATE_CLICK',
       payload: {
-        label,
-        value: moment(value).toISOString(),
+        date: {
+          ...state.date,
+          [label]: moment(value).toISOString(),
+        },
       },
     });
     return;
@@ -176,6 +259,9 @@ export const BookingProvider = ({ children }) => {
     ({
       domestic: { travelIn, travelOut, hotelFeePerDay, stayFeePerDay },
       international,
+    }: {
+      domestic: DomesticFees;
+      international: InternationalFees;
     }) => {
       const numOfDays = moment(state.date.Return).diff(
         moment(state.date.Leave),
@@ -183,22 +269,26 @@ export const BookingProvider = ({ children }) => {
       );
 
       if (state.flightType === 'domestic') {
+        const feePerDay = state.withHotel ? hotelFeePerDay : stayFeePerDay;
         dispatch({
           type: 'INITIAL_AMOUNT_SET',
-          payload: state.withHotel
-            ? travelIn + travelOut + hotelFeePerDay * numOfDays
-            : travelIn + travelOut + stayFeePerDay * numOfDays,
+          payload: {
+            initialAmount: travelIn + travelOut + feePerDay * numOfDays,
+          },
         });
         return;
       }
-      if (state.flightType === 'international') {
+      const internationalRegion =
+        international[state.travellingFromRegion.toLowerCase()];
+      if (state.flightType === 'international' && internationalRegion) {
         const { travelIn, travelOut, hotelFeePerDay, stayFeePerDay } =
-          international[state.travellingFromRegion.toLowerCase()];
+          internationalRegion;
+        const feePerDay = state.withHotel ? hotelFeePerDay : stayFeePerDay;
         dispatch({
           type: 'INITIAL_AMOUNT_SET',
-          payload: state.withHotel
-            ? travelIn + travelOut + hotelFeePerDay * numOfDays
-            : travelIn + travelOut + stayFeePerDay * numOfDays,
+          payload: {
+            initialAmount: travelIn + travelOut + feePerDay * numOfDays,
+          },
         });
       }
     },
@@ -212,11 +302,11 @@ export const BookingProvider = ({ children }) => {
   );
 
   const discountSet = useCallback(
-    (offers) => {
+    (offers: LimitedOffers) => {
       if (state.flightType) {
         dispatch({
           type: 'DISCOUNT_SET',
-          payload: offers[state.flightType],
+          payload: { discount: offers[state.flightType] },
         });
         return;
       }
@@ -231,19 +321,21 @@ export const BookingProvider = ({ children }) => {
     if (state.discount > 0) {
       dispatch({
         type: 'FINAL_AMOUNT_SET',
-        payload: Math.floor(state.initialAmount * (1 - state.discount / 100)),
+        payload: {
+          amount: Math.floor(state.initialAmount * (1 - state.discount / 100)),
+        },
       });
 
       return;
     } else {
       dispatch({
         type: 'FINAL_AMOUNT_SET',
-        payload: state.initialAmount,
+        payload: { amount: state.initialAmount },
       });
     }
   }, [state.discount, state.initialAmount]);
 
-  const formSubmit = async (changeLoading) => {
+  const formSubmit = async (changeLoading: (val: boolean) => void) => {
     changeLoading(true);
     const {
       flightType,
@@ -274,15 +366,15 @@ export const BookingProvider = ({ children }) => {
         { headers: { Authorization: `Bearer ${authToken}` } },
       );
       closeModal();
-      openSuccessSnackbar(message);
-    } catch (err) {
+      triggerSnackbar({ type: 'success', message });
+    } catch (err: any) {
       console.log(err);
       if (err.response.data.msg === 'Authentication Failed') {
         openSignInModal();
         return;
       }
       closeModal();
-      openFailedSnackbar(err.response.data.msg);
+      triggerSnackbar({ type: 'error', message: err.response.data.msg });
     } finally {
       changeLoading(false);
     }
@@ -324,7 +416,7 @@ export const BookingProvider = ({ children }) => {
     }
   }, [amountSet, state.initialAmount]);
 
-  const value = {
+  const value: BookingContextType = {
     flightType: state.flightType,
     regionsCategory: state.regionsCategory,
     eachRegion: state.travellingFromRegion,
@@ -343,10 +435,18 @@ export const BookingProvider = ({ children }) => {
     locationSelect,
     hotelToggle,
     dateSelection,
-    title: bookingInfo.title ?? '',
-    limitedOffers: bookingInfo.limitedOffers ?? '',
-    domestic: bookingInfo.domestic ?? '',
-    international: bookingInfo.international ?? '',
+    title: bookingInfo.title || '',
+    limitedOffers: bookingInfo.limitedOffers || {
+      domestic: 0,
+      international: 0,
+    },
+    domestic: bookingInfo.domestic || {
+      travelIn: 0,
+      travelOut: 0,
+      hotelFeePerDay: 0,
+      stayFeePerDay: 0,
+    },
+    international: bookingInfo.international || {},
     formSubmit,
   };
 
@@ -356,7 +456,13 @@ export const BookingProvider = ({ children }) => {
 };
 
 const useBookingContext = () => {
-  return useContext(BookingContext);
+  const context = useContext(BookingContext);
+
+  if (!context) {
+    throw new Error('useBookingContext must be used within a BookingProvider');
+  }
+
+  return context;
 };
 
 export default useBookingContext;

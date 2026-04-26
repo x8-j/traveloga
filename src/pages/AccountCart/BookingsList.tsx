@@ -24,8 +24,10 @@ const BookingsList = ({
       try {
         const { data } = await axios.get(
           'https://traveloga-api.onrender.com/api/v1/bookings',
-          { headers: { Authorization: `Bearer ${authToken}` } },
-          { signal: controller.signal },
+          {
+            headers: { Authorization: `Bearer ${authToken}` },
+            signal: controller.signal,
+          },
         );
         alterBookingList(data);
       } catch (err) {

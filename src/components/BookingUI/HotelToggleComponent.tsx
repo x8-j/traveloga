@@ -1,7 +1,6 @@
 import { faHotel } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useBookingContext from './BookingStateContext';
-import React from 'react';
 
 const HotelToggleComponent = () => {
   const { withHotel, hotelToggle, errors } = useBookingContext();

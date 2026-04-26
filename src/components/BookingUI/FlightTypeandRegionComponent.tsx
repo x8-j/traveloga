@@ -1,6 +1,7 @@
-import React from 'react';
 import useBookingContext from './BookingStateContext';
 import flights from '../../mockdata.json';
+import type { FlightType } from './BookingReducer';
+import type { Location } from '../../types/Location';
 
 const FlightypeAndRegionComponent = () => {
   const { flightType, flightTypeSelect, regionSelect, errors } =
@@ -25,7 +26,9 @@ const FlightypeAndRegionComponent = () => {
           </label>
           <select
             className="button_transition overflow-hidden truncate rounded-lg pb-2 pl-2 pt-6 shadow-md outline-amber-300 ring-1 ring-slate-600 md:text-lg"
-            onChange={(e) => flightTypeSelect(e.currentTarget.value)}
+            onChange={(e) =>
+              flightTypeSelect(e.currentTarget.value as FlightType)
+            }
             autoFocus
             required>
             <option value="">___</option>
@@ -41,27 +44,30 @@ const FlightypeAndRegionComponent = () => {
             className="button_transition truncate rounded-lg pb-2 pl-2 pt-6 shadow-md outline-amber-300 ring-1 ring-slate-600 disabled:bg-slate-300 group-active:bg-white md:text-lg"
             onChange={(e) => {
               const [eachProv, region] = e.currentTarget.value.split(',');
+              if (!region || !eachProv) return;
               regionSelect(eachProv, region);
             }}
             required
             disabled={!flightType}>
             <option value="">___</option>
             {flightType &&
-              flights[flightType].map(({ region, location }, index) => (
-                <optgroup
-                  className="font-medium capitalize"
-                  key={index}
-                  label={region}>
-                  {Object.keys(location).map((eachProvince, index) => (
-                    <option
-                      className="capitalize"
-                      key={index}
-                      value={[eachProvince, region]}>
-                      {eachProvince}
-                    </option>
-                  ))}
-                </optgroup>
-              ))}
+              (flights as Location)[flightType].map(
+                ({ region, location }, index) => (
+                  <optgroup
+                    className="font-medium capitalize"
+                    key={index}
+                    label={region}>
+                    {Object.keys(location).map((eachProvince, index) => (
+                      <option
+                        className="capitalize"
+                        key={index}
+                        value={[eachProvince, region]}>
+                        {eachProvince}
+                      </option>
+                    ))}
+                  </optgroup>
+                ),
+              )}
           </select>
         </div>
       </div>

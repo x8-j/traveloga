@@ -3,7 +3,7 @@ import {
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { useGlobalContext } from '../../context.js';
 import {
   DateOfBookingComponent,
@@ -11,14 +11,14 @@ import {
   HotelToggleComponent,
   LocationComponent,
   PriceComponent,
-} from './index.js';
-import useBookingContext, { BookingProvider } from './BookingStateContext.js';
+} from './index';
+import useBookingContext, { BookingProvider } from './BookingStateContext';
 
 const BookingUI = () => {
   const { closeModal } = useGlobalContext();
   const [isLoading, setIsLoading] = useState(false);
 
-  const changeLoading = (bool) => {
+  const changeLoading = (bool: boolean) => {
     setIsLoading(bool);
   };
 
@@ -59,7 +59,13 @@ const BookingUI = () => {
   );
 };
 
-const FormWrapper = ({ children, changeLoading }) => {
+const FormWrapper = ({
+  children,
+  changeLoading,
+}: {
+  children: ReactNode;
+  changeLoading: (val: boolean) => void;
+}) => {
   const { formSubmit } = useBookingContext();
 
   return (
