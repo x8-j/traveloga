@@ -14,7 +14,7 @@ const OfferSelection = () => {
           { signal: controller.signal },
         );
         setInfo(data);
-      } catch (err) {
+      } catch (err: any) {
         if (axios.isCancel(err)) return console.log('fetch cancelled!');
         alert(err.response.data.msg);
       }

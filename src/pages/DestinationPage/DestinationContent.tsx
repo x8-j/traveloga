@@ -49,7 +49,7 @@ const DestinationContent = () => {
           landmark: data.landmark,
           history: data.history,
         });
-      } catch (err) {
+      } catch (err: any) {
         if (axios.isCancel(err)) return console.log('fetch cancelled!');
         console.log(err.response.data.msg);
       }

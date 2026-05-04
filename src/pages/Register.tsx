@@ -91,7 +91,7 @@ const Register = () => {
       userSignUp(token);
       triggerSnackbar({ type: 'success', message });
       navigate('/');
-    } catch (err) {
+    } catch (err: any) {
       console.log(err);
       setIsLoading(false);
       triggerSnackbar({ type: 'error', message: err.response.data.msg });
