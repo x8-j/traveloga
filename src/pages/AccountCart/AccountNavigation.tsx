@@ -77,6 +77,7 @@ const AccountNavigation = ({
               <Menu.Items className="button_transition absolute right-0 mt-7 flex origin-top-right flex-col bg-white text-black">
                 {navList.map(([icon, title], index) => (
                   <Menu.Item
+                    as="menuitem"
                     onClick={() => {
                       setFilter(title);
                     }}
