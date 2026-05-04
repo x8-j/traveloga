@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useGlobalContext } from '../../context';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -16,25 +16,28 @@ const EachBooking = ({ eachBooking, alterBookingList }: EachBookingProps) => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const cancelStatus = async (id: string) => {
-    setIsLoading(true);
-    try {
-      const {
-        data: { message, bookings },
-      } = await axios.patch(
-        `https://traveloga-api.onrender.com/api/v1/bookings/${id}`,
-        { status: 'Cancelled' },
-        { headers: { Authorization: `Bearer ${authToken}` } },
-      );
-      triggerSnackbar({ type: 'success', message });
-      alterBookingList(bookings);
-    } catch (err) {
-      triggerSnackbar({ type: 'error', message: err.response.data.message });
-      console.log(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const cancelStatus = useCallback(
+    async (id: string) => {
+      setIsLoading(true);
+      try {
+        const {
+          data: { message, bookings },
+        } = await axios.patch(
+          `https://traveloga-api.onrender.com/api/v1/bookings/${id}`,
+          { status: 'Cancelled' },
+          { headers: { Authorization: `Bearer ${authToken}` } },
+        );
+        triggerSnackbar({ type: 'success', message });
+        alterBookingList(bookings);
+      } catch (err) {
+        triggerSnackbar({ type: 'error', message: err.response.data.message });
+        console.log(err);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [alterBookingList, authToken, triggerSnackbar],
+  );
 
   const deleteBooking = async (id: string) => {
     try {
@@ -61,7 +64,12 @@ const EachBooking = ({ eachBooking, alterBookingList }: EachBookingProps) => {
     ) {
       cancelStatus(eachBooking._id);
     }
-  }, []);
+  }, [
+    cancelStatus,
+    eachBooking._id,
+    eachBooking.dateOfLeave,
+    eachBooking.status,
+  ]);
 
   if (eachBooking) {
     const {
