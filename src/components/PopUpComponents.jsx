@@ -20,7 +20,7 @@ const StatusSnackBar = () => {
         closeSnackbar();
       }, 2000);
     }
-  }, [isOpen]);
+  }, [isOpen, closeSnackbar]);
 
   return (
     <div className="fixed bottom-0 left-0 flex w-fit items-center gap-4 bg-white px-4 py-3 text-black">

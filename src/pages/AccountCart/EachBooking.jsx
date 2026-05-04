@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useGlobalContext } from '../../context';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,25 +9,28 @@ const EachBooking = ({ eachBooking, alterBookingList }) => {
     useGlobalContext();
   const [isLoading, setIsLoading] = useState(false);
 
-  const cancelStatus = async (id) => {
-    setIsLoading(true);
-    try {
-      const {
-        data: { message, bookings },
-      } = await axios.patch(
-        `https://traveloga-api.onrender.com/api/v1/bookings/${id}`,
-        { status: 'Cancelled' },
-        { headers: { Authorization: `Bearer ${authToken}` } },
-      );
-      openSuccessSnackbar(message);
-      alterBookingList(bookings);
-    } catch (err) {
-      openFailedSnackbar(err.response.data.message);
-      console.log(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const cancelStatus = useCallback(
+    async (id) => {
+      setIsLoading(true);
+      try {
+        const {
+          data: { message, bookings },
+        } = await axios.patch(
+          `https://traveloga-api.onrender.com/api/v1/bookings/${id}`,
+          { status: 'Cancelled' },
+          { headers: { Authorization: `Bearer ${authToken}` } },
+        );
+        openSuccessSnackbar(message);
+        alterBookingList(bookings);
+      } catch (err) {
+        openFailedSnackbar(err.response.data.message);
+        console.log(err);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [alterBookingList, authToken, openFailedSnackbar, openSuccessSnackbar],
+  );
 
   const deleteBooking = async (id) => {
     try {
@@ -54,7 +57,12 @@ const EachBooking = ({ eachBooking, alterBookingList }) => {
     ) {
       cancelStatus(eachBooking._id);
     }
-  }, []);
+  }, [
+    cancelStatus,
+    eachBooking._id,
+    eachBooking.dateOfLeave,
+    eachBooking.status,
+  ]);
 
   if (eachBooking) {
     const {
