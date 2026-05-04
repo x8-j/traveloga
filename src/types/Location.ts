@@ -1,4 +1,4 @@
-import type { FlightType } from '~/components/BookingUI/BookingReducer';
+import type { FlightType } from '../components/BookingUI/BookingReducer';
 
 export type Location = Record<FlightType, RegionGroup[]>;
 

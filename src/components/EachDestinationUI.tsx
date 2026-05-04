@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
-import { useGlobalContext } from '../context.js';
+import { useGlobalContext } from '../context';
 
 const EachDestinationUI = () => {
   const [destinationInfo, setDestinationInfo] = useState(null);

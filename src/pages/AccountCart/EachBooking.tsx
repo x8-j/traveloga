@@ -3,8 +3,8 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useGlobalContext } from '../../context';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import type { Booking } from '~/types/Booking';
-import { useSnackbar } from '~/store/snackbar';
+import type { Booking } from '../../types/Booking';
+import { useSnackbar } from '../../store/snackbar';
 
 interface EachBookingProps {
   eachBooking: Booking;

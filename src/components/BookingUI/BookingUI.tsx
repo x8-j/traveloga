@@ -4,7 +4,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState, type ReactNode } from 'react';
-import { useGlobalContext } from '../../context.js';
+import { useGlobalContext } from '../../context';
 import {
   DateOfBookingComponent,
   FlightypeAndRegionComponent,

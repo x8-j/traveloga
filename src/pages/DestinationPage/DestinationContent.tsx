@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useGlobalContext } from '../../context';
-import type { PreviewDestination } from '~/types/Destination';
+import type { PreviewDestination } from '../../types/Destination';
 
 type DestinationCategoryKeys = 'beach' | 'landmark' | 'history';
 type DestionationCategoryList = Record<

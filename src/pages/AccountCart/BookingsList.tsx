@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect } from 'react';
 import { useGlobalContext } from '../../context';
 import EachBooking from './EachBooking';
-import type { Booking } from '~/types/Booking';
+import type { Booking } from '../../types/Booking';
 import type { BookingFilter } from './AccountNavigation';
 
 interface BookingsListProps {

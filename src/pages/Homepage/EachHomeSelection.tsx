@@ -2,7 +2,7 @@ import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { useGlobalContext } from '../../context';
-import type { PreviewDestination } from '~/types/Destination';
+import type { PreviewDestination } from '../../types/Destination';
 
 interface SelectionProps {
   info: PreviewDestination[];

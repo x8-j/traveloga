@@ -11,8 +11,8 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { useGlobalContext } from '../context';
-import { StatusSnackBar } from '@components/PopUpComponents';
-import { useSnackbar } from '@store/snackbar';
+import { StatusSnackBar } from '../components/PopUpComponents';
+import { useSnackbar } from '../store/snackbar';
 
 interface FormValues {
   firstname: string;

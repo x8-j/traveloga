@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import { useGlobalContext } from '../../context';
 import AccountNavigation, { type BookingFilter } from './AccountNavigation';
 import BookingsList from './BookingsList';
-import TransitionWrapper from '@components/TransitionWrapper';
-import PaymentModal from '@components/PaymentModal';
-import type { Booking } from '~/types/Booking';
+import TransitionWrapper from '../../components/TransitionWrapper';
+import PaymentModal from '../../components/PaymentModal';
+import type { Booking } from '../../types/Booking';
 
 const PersonalAccount = () => {
   const {

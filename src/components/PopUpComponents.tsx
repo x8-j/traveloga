@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useGlobalContext } from '../context';
-import { useSnackbar } from '@store/snackbar';
+import { useSnackbar } from '../store/snackbar';
 
 const StatusSnackBar = () => {
   const { type, isOpen, message, closeSnackbar } = useSnackbar();

@@ -11,10 +11,10 @@ import {
   bookingReducer,
   type FlightType,
 } from './BookingReducer';
-import { useGlobalContext } from '../../context.js';
+import { useGlobalContext } from '../../context';
 import moment from 'moment';
 import axios from 'axios';
-import { useSnackbar } from '@store/snackbar';
+import { useSnackbar } from '../../store/snackbar';
 
 interface DomesticFees {
   travelIn: number;

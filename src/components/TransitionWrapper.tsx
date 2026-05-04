@@ -1,6 +1,6 @@
 import { Dialog, Transition } from '@headlessui/react';
 import React, { Fragment } from 'react';
-import { useGlobalContext } from '../context.js';
+import { useGlobalContext } from '../context';
 
 const TransitionWrapper = ({
   children,

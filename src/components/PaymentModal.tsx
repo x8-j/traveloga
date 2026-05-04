@@ -3,8 +3,8 @@ import { useGlobalContext } from '../context';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCashRegister } from '@fortawesome/free-solid-svg-icons';
-import { useSnackbar } from '~/store/snackbar';
-import type { Booking } from '~/types/Booking';
+import { useSnackbar } from '../store/snackbar';
+import type { Booking } from '../types/Booking';
 
 const PaymentModal = ({
   alterBookingList,
