@@ -25,7 +25,7 @@ const BookingsList = ({ listOfBookings, alterBookingList, bookingFilter }) => {
 
     fetchData();
     return () => controller.abort();
-  }, [authToken]);
+  }, [authToken, alterBookingList]);
 
   if (bookingFilter) {
     return (
