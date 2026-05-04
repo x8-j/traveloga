@@ -165,7 +165,6 @@ const Login = () => {
                   </div>
                   <div className="flex gap-4 lg:gap-12">
                     <Link
-                      disabled={isLoading}
                       className="button_transition flex flex-1 justify-center bg-[#2B8E9B]/30 py-4 hover:bg-[#2B8E9B]/50 md:p-4"
                       to="/">
                       RETURN HOME
