@@ -19,7 +19,7 @@ const Nav = () => {
 
   const { isOpen } = useSnackbar();
 
-  const navRef = useRef(null);
+  const navRef = useRef<HTMLDivElement>(null);
 
   const navItems = [
     ['/', 'Home'],
@@ -73,18 +73,21 @@ const Nav = () => {
                     <Menu.Items className="absolute right-0 mt-6 flex items-center">
                       <div className="  flex flex-col items-center justify-around bg-white text-lg ">
                         {navItems.map(([link, title], index) => (
-                          <Menu.Item onClick={() => scrollUp()} key={index}>
+                          <Menu.Item
+                            as="menuitem"
+                            onClick={() => scrollUp()}
+                            key={index}>
                             <NavLink
-                              to={link}
+                              to={link ?? ''}
                               className="w-full border-transparent px-6 py-4 md:text-white"
-                              style={({ isActive }) => {
+                              style={({ isActive }: { isActive: boolean }) => {
                                 return { color: isActive ? '#fbbf24' : '' };
                               }}>
                               {title}
                             </NavLink>
                           </Menu.Item>
                         ))}
-                        <Menu.Item onClick={() => scrollUp()}>
+                        <Menu.Item as="menuitem" onClick={() => scrollUp()}>
                           <NavLink
                             to={user ? '/personal-account' : '/login'}
                             className=" px-6 py-4 hover:text-amber-400"
@@ -107,7 +110,7 @@ const Nav = () => {
             <div className="right-0 hidden h-fit flex-row items-center justify-between gap-3 sm:flex md:gap-4">
               {navItems.map(([link, title], index) => (
                 <NavLink
-                  to={link}
+                  to={link ?? ''}
                   key={index}
                   className="button_transition w-fit text-center text-white transition-all hover:border-b-[3px] hover:border-amber-300"
                   style={({ isActive }) => {
@@ -125,8 +128,8 @@ const Nav = () => {
                 className=" button_transition rounded-3xl  bg-amber-300 px-4 py-2 text-center text-sm hover:bg-amber-300 hover:text-white lg:px-4 lg:py-3 "
                 style={({ isActive }) => {
                   return {
-                    backgroundColor: isActive && '#fcd34d',
-                    color: isActive && 'white',
+                    backgroundColor: isActive ? '#fcd34d' : undefined,
+                    color: isActive ? 'white' : undefined,
                   };
                 }}
                 onClick={() => scrollUp()}>
