@@ -32,7 +32,7 @@ const PaymentModal = ({
       );
       triggerSnackbar({ type: 'success', message });
       alterBookingList(bookings);
-    } catch (err) {
+    } catch (err: any) {
       console.log(err);
       triggerSnackbar({ type: 'error', message: err.response.data.message });
     } finally {

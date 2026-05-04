@@ -29,7 +29,7 @@ const EachBooking = ({ eachBooking, alterBookingList }: EachBookingProps) => {
         );
         triggerSnackbar({ type: 'success', message });
         alterBookingList(bookings);
-      } catch (err) {
+      } catch (err: any) {
         triggerSnackbar({ type: 'error', message: err.response.data.message });
         console.log(err);
       } finally {
@@ -51,7 +51,7 @@ const EachBooking = ({ eachBooking, alterBookingList }: EachBookingProps) => {
       );
       triggerSnackbar({ type: 'success', message });
       alterBookingList(bookings);
-    } catch (err) {
+    } catch (err: any) {
       triggerSnackbar({ type: 'error', message: err.response.data.message });
       console.log(err);
     }
