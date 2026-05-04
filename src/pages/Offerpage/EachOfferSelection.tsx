@@ -1,7 +1,7 @@
 import { faTag } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useGlobalContext } from '../../context';
-import type { Destionation } from '~/types/Destination';
+import type { Destionation } from '../../types/Destination';
 
 const EachOfferSelection = ({ data }: { data: Destionation[] }) => {
   const { openBookingUI } = useGlobalContext();

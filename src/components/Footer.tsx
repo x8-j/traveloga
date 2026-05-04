@@ -14,7 +14,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useSnackbar } from '../store/snackbar.js';
+import { useSnackbar } from '../store/snackbar';
 
 const Footer = () => {
   return (
@@ -51,8 +51,8 @@ const TopFooter = () => {
         { headers: { 'Content-Type': 'application/json' } },
       );
       await emailjs.send(
-        process.env.REACT_APP_SERVICE_ID,
-        process.env.REACT_APP_TEMPLATE_ID,
+        process.env.REACT_APP_SERVICE_ID ?? '',
+        process.env.REACT_APP_TEMPLATE_ID ?? '',
         formData,
         process.env.REACT_APP_PUBLIC_KEY,
       );
